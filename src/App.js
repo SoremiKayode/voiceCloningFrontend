@@ -6,10 +6,12 @@ import Signup from './components/Auth/Signup';
 import AdminDashboard from './components/Admin/AdminDashboard';
 import EditUser from './components/Admin/EditUser';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { UserProvider } from './contexts/UserContext'; // Adjust the path as needed
 import Layout from './components/Layout';
 function App() {
   return (
     <ThemeProvider>
+      <UserProvider>
     <Router>
       <Layout>
       <Routes>
@@ -21,6 +23,7 @@ function App() {
       </Routes>
       </Layout>
     </Router>
+    </UserProvider>
     </ThemeProvider>
   );
 }

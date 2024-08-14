@@ -28,6 +28,30 @@ export const Content = styled.div`
   padding: 2rem;
 `;
 
+export const Button = styled.button`
+  padding: 1rem 2rem;
+  margin-top: 1rem;
+  background-color: #007bff;
+  color: white;
+  font-size: 1.2rem;
+  font-family: 'Roboto', sans-serif;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+export const ButtonTable = styled.button`
+font-family : Tahoma;
+font-size : 14px;
+background : none;
+border : none;
+box-shadow : none;
+
+`;
+
 export const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
@@ -45,6 +69,3 @@ export const TableRow = styled.tr`
 `;
 
 export const TableCell = styled.td``;
-export const Button = styled.button`
-background-color : blue;
-`;

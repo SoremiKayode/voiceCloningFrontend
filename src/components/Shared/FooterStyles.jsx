@@ -1,12 +1,14 @@
 import styled from 'styled-components';
 
 export const FooterContainer = styled.footer`
+  margin-top : 4rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 2rem;
-  background-color: #1a1a2e;
-  color: #ffffff;
+  background-color: ${({ theme }) => (theme === 'light' ? '#f0f0f0' : '#333')};
+  color: ${({ theme }) => (theme === 'light' ? '#000' : '#fff')};
+  box-shadow : 2px 4px 8px rgba(0, 0, 0, 0.2), 4px 8px 16px rgba(0, 0, 0,0.2);
   text-align: center;
 `;
 
@@ -14,18 +16,18 @@ export const FooterLogo = styled.h2`
   font-size: 1.5rem;
   font-family: 'Roboto', sans-serif;
   font-weight: bold;
-  color: #00aaff;
+  color: ${({ theme }) => (theme === 'light' ? '#000' : '#fff')};
   margin-bottom: 1rem;
 `;
 
 export const FooterNav = styled.nav`
   display: flex;
   justify-content: center;
+  color: ${({ theme }) => (theme === 'light' ? '#000' : '#fff')};
   margin-bottom: 1rem;
 `;
 
 export const FooterNavItem = styled.a`
-  color: #ffffff;
   margin: 0 1.5rem;
   font-size: 1rem;
   font-family: 'Roboto', sans-serif;
@@ -64,5 +66,6 @@ export const SocialIcon = styled.a`
 export const FooterText = styled.p`
   font-size: 0.875rem;
   font-family: 'Roboto', sans-serif;
-  color: #cccccc;
+  color: ${({ theme }) => (theme === 'light' ? '#000' : '#fff')};
+
 `;

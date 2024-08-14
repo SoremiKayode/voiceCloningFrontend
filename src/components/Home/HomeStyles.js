@@ -4,10 +4,10 @@ export const Container = styled.div`
   display: flex;
   flex-direction: row;
   padding: 2rem;
-  background-color: ${({ theme }) => theme.background};
-  color: ${({ theme }) => theme.color};
+  background-color: ${({ theme }) => (theme === 'light' ? '#f0f0f0' : '#333')};
+  color: ${({ theme }) => (theme === 'light' ? '#000' : '#fff')};
   height: 100vh;
-  margin-bottom : 8rem;
+  margin-bottom: 8rem;
 `;
 
 export const Column = styled.div`
@@ -15,7 +15,7 @@ export const Column = styled.div`
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  margin-bottom: 2rem;  /* Added margin bottom */
+  margin-bottom: 2rem;
 `;
 
 export const TypewriterContainer = styled.div`
@@ -30,20 +30,24 @@ export const TypewriterText = styled.p`
   margin-bottom: 2rem;
   text-align: left;
   height: auto;
-  white-space: wrap; /* Allow text to wrap */
+  white-space: wrap;
   border-right: 0.15em solid ${({ theme }) => theme.color};
   animation: blink-caret 0.75s infinite;
-  
+
   @keyframes blink-caret {
-    from, to { border-color: transparent; }
-    50% { border-color: ${({ theme }) => theme.color}; }
+    from, to {
+      border-color: transparent;
+    }
+    50% {
+      border-color: ${({ theme }) => theme.color};
+    }
   }
 `;
 
 export const TabContainer = styled.div`
   display: flex;
   margin-bottom: 1rem;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);  /* Added shadow */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 `;
 
 export const Tab = styled.div`
@@ -55,9 +59,10 @@ export const Tab = styled.div`
   box-shadow: ${({ active }) => (active ? '0px 4px 8px rgba(0, 0, 0, 0.2)' : 'none')};
   border-bottom: ${({ active, theme }) => (active ? `2px solid ${theme.color}` : 'none')};
 `;
+
 export const Accordion = styled.div`
   margin-top: 1rem;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);  /* Added shadow */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 `;
 
 export const AccordionContent = styled.div`
@@ -70,9 +75,9 @@ export const AccordionContent = styled.div`
 
 export const ReactQuillWrapper = styled.div`
   margin-bottom: 1rem;
-  
+
   .ql-container {
-    min-height: 160px; /* At least 8 rows */
+    min-height: 160px;
   }
 `;
 
@@ -90,6 +95,7 @@ export const Button = styled.button`
   border: none;
   border-radius: 4px;
   cursor: pointer;
+
   &:hover {
     background-color: #0056b3;
   }
@@ -136,4 +142,10 @@ export const Select = styled.select`
   border-radius: 4px;
   font-size: 1rem;
   font-family: 'Roboto', sans-serif;
+`;
+
+export const AudioOutput = styled.div`
+  margin-bottom: 1rem;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  padding : 10px;
 `;

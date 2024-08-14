@@ -5,14 +5,17 @@ export const Container = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f5f5f5;
+  background-color: ${({ theme }) => (theme === 'light' ? '#f0f0f0' : '#333')};
+  color: ${({ theme }) => (theme === 'light' ? '#000' : '#fff')};
 `;
 
 export const FormWrapper = styled.div`
   padding: 2rem;
   background: white;
   border-radius: 8px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: ${({ theme }) => (theme === 'light' ? '0px 4px 12px rgba(0, 0, 0, 0.1)' : '0px 4px 12px rgba(255, 255, 255, 0.1)')};
+  background-color: ${({ theme }) => (theme === 'light' ? '#f0f0f0' : '#333')};
+  color: ${({ theme }) => (theme === 'light' ? '#000' : '#fff')};
   width: 400px;
 `;
 

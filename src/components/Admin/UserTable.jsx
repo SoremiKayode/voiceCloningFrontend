@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, TableRow, TableCell, Button } from './AdminStyles';
+import { Table, TableRow, TableCell, Button, ButtonTable } from './AdminStyles';
 
 const UserTable = () => {
   // Sample users data
@@ -30,8 +30,8 @@ const UserTable = () => {
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.phone}</TableCell>
               <TableCell>
-                <Button>Edit</Button>
-                <Button onClick={() => handleDelete(user.id)}>Delete</Button>
+                <ButtonTable>Edit</ButtonTable>
+                <ButtonTable onClick={() => handleDelete(user.id)}>Delete</ButtonTable>
               </TableCell>
             </TableRow>
           ))}

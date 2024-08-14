@@ -1,10 +1,13 @@
 import React from 'react';
 import { Container, FormWrapper, Input, Button } from '../../AppStyles';
-
+import {useTheme} from "../../contexts/ThemeContext"
 const Signup = () => {
+  const {theme} = useTheme();
+
   return (
-    <Container>
-      <FormWrapper>
+
+    <Container theme={theme}>
+      <FormWrapper theme={theme}>
         <h2>Sign Up</h2>
         <form>
           <Input type="email" placeholder="Email" />
