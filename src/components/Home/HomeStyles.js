@@ -7,7 +7,6 @@ export const Container = styled.div`
   background-color: ${({ theme }) => (theme === 'light' ? '#f0f0f0' : '#333')};
   color: ${({ theme }) => (theme === 'light' ? '#000' : '#fff')};
   height: 100vh;
-  margin-bottom: 8rem;
 `;
 
 export const Column = styled.div`
@@ -16,6 +15,18 @@ export const Column = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 2rem;
+  max-height : 500px;
+  overflow-y : auto;
+`;
+
+export const Column1 = styled.div`
+  flex: 2;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+  max-height : 500px;
+  overflow-y : auto;
 `;
 
 export const TypewriterContainer = styled.div`
@@ -78,6 +89,8 @@ export const ReactQuillWrapper = styled.div`
 
   .ql-container {
     min-height: 160px;
+    height : 300px;
+    overflow-y: auto;
   }
 `;
 

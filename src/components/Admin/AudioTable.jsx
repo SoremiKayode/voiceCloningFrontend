@@ -1,16 +1,10 @@
 import React from 'react';
 import { Table, TableRow, TableCell, Button } from './AdminStyles';
 
-const AudioTable = () => {
-  // Sample audio files metadata
-  const audioFiles = [
-    { id: 1, name: 'audio1.mp3', date: '2024-08-13' },
-    { id: 2, name: 'audio2.mp3', date: '2024-08-12' },
-    // Add more audio files
-  ];
-
-  const handleDelete = (id) => {
-    // Delete audio file logic here
+const AudioTable = ({ audios, onDeleteAudio }) => {
+  
+  const handleOpenAudio = (url) => {
+    window.open(url, '_blank');
   };
 
   return (
@@ -25,12 +19,14 @@ const AudioTable = () => {
           </tr>
         </thead>
         <tbody>
-          {audioFiles.map(file => (
-            <TableRow key={file.id}>
-              <TableCell>{file.name}</TableCell>
-              <TableCell>{file.date}</TableCell>
+          {audios && audios.forEach(audio => (
+            <TableRow key={audio._id}>
               <TableCell>
-                <Button onClick={() => handleDelete(file.id)}>Delete</Button>
+                <Button onClick={() => handleOpenAudio(audio.url)}>{audio.name}</Button>
+              </TableCell>
+              <TableCell>{new Date(audio.datetime).toLocaleDateString()}</TableCell>
+              <TableCell>
+                <Button onClick={() => onDeleteAudio(audio._id)}>Delete</Button>
               </TableCell>
             </TableRow>
           ))}

@@ -27,7 +27,7 @@ export const Input = styled.input`
   border-radius: 4px;
 `;
 
-export const Button = styled.button`
+export const Button = styled.input`
   width: 100%;
   padding: 0.75rem;
   background-color: #4caf50;
@@ -35,7 +35,13 @@ export const Button = styled.button`
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  margin: 0;
   &:hover {
     background-color: #45a049;
   }
 `;
+
+export const ErrorLabel = styled.span`
+display: block;
+font-size: 1.5em;
+`

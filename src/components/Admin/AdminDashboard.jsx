@@ -1,17 +1,56 @@
-// AdminDashboard.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AdminContainer, Sidebar, Content, Button } from './AdminStyles';
 import UserTable from './UserTable';
 import AudioTable from './AudioTable';
 import { sanitizeUserInput } from '../../utils/userSanitization';
 import axios from 'axios';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { showErrorNotification, showSuccessNotification } from '../../utils/Notification';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('users');
-  const [formData, setFormData] = useState({ email: '', phoneNumber: '', password: '' });
+  const [formData, setFormData] = useState({ email: '', phoneNumber: '', password: '', isAdmin: false });
   const [errors, setErrors] = useState({});
+  const [users, setUsers] = useState([]);
+  const [audios, setAudios] = useState([]);
+  const [editingUser, setEditingUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUsers = () => {
+      try {
+        const token = localStorage.getItem('authToken');
+        const userData = JSON.parse(localStorage.getItem('userdata'));
+        const response = axios.get('http://127.0.0.1:8080/api/all-profiles', {
+          headers: { 'Authorization': `Token ${token}` },
+          params : userData,
+        });
+        setUsers(response.data);
+        showSuccessNotification(`${response.data[0]}`)
+      } catch (error) {
+        showErrorNotification('Failed to fetch users.');
+      }
+    };
+  
+    const fetchAudios = () => {
+      try {
+        const token = localStorage.getItem('authToken');
+        const userData = JSON.parse(localStorage.getItem('userdata'));
+        const response = axios.get('http://127.0.0.1:8080/api/all-audio', {
+          headers: { 'Authorization': `Token ${token}` },
+          params: userData,
+        });
+        setAudios(response.data);
+        showSuccessNotification(`${response.data[0]}`)
+      } catch (error) {
+        showErrorNotification('Failed to fetch audio files.');
+      }
+    };
+  
+
+      fetchUsers();
+      fetchAudios();
+
+  }, []);
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -25,13 +64,45 @@ const AdminDashboard = () => {
 
     if (Object.keys(validationErrors).length === 0) {
       try {
-        const response = await axios.post('/signup', formData);
-        toast.success('User added successfully!');
-        setFormData({ email: '', phoneNumber: '', password: '' });
+        const response = await axios.post('http://127.0.0.1:8080/api/signup', formData);
+        showSuccessNotification('User added successfully!');
+        setFormData({ email: '', phoneNumber: '', password: '', isAdmin: false });
+        setUsers([...users, response.data]);
       } catch (error) {
-        toast.error('Failed to add user.');
+        showErrorNotification('Failed to add user.');
       }
     }
+  };
+
+  const handleDeleteUser = async (userId) => {
+    try {
+      await axios.delete(`http://127.0.0.1:8080/api/delete-user/${userId}`);
+      showSuccessNotification('User deleted successfully!');
+      setUsers(users.filter((user) => user._id !== userId));
+    } catch (error) {
+     showErrorNotification('Failed to delete user.');
+    }
+  };
+
+  const handleDeleteAudio = async (audioId) => {
+    try {
+      await axios.delete(`http://127.0.0.1:8080/api/delete-audio/${audioId}`);
+      showSuccessNotification('Audio deleted successfully!');
+      setAudios(audios.filter((audio) => audio._id !== audioId));
+    } catch (error) {
+      showErrorNotification('Failed to delete audio.');
+    }
+  };
+
+  const handleEditUser = (user) => {
+    setEditingUser(user);
+    setFormData({
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      password: '',
+      isAdmin: user.isAdmin,
+    });
+    setActiveTab('addUser');
   };
 
   return (
@@ -44,8 +115,8 @@ const AdminDashboard = () => {
         </ul>
       </Sidebar>
       <Content>
-        {activeTab === 'users' && <UserTable />}
-        {activeTab === 'audio' && <AudioTable />}
+        {activeTab === 'users' && <UserTable users={users} onDeleteUser={handleDeleteUser} onEditUser={handleEditUser} />}
+        {activeTab === 'audio' && <AudioTable audios={audios} onDeleteAudio={handleDeleteAudio} />}
         {activeTab === 'addUser' && (
           <form onSubmit={handleSubmit}>
             <div>
@@ -81,13 +152,27 @@ const AdminDashboard = () => {
               />
               {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
             </div>
-            <Button type="submit">Add User</Button>
+            <div>
+              <label>Admin:</label>
+              <select
+                name="isAdmin"
+                value={formData.isAdmin}
+                onChange={handleInputChange}
+              >
+                <option value={false}>No</option>
+                <option value={true}>Yes</option>
+              </select>
+            </div>
+            <Button type="submit">{editingUser ? 'Update User' : 'Add User'}</Button>
           </form>
         )}
       </Content>
-      <ToastContainer />
     </AdminContainer>
   );
 };
 
 export default AdminDashboard;
+
+
+
+

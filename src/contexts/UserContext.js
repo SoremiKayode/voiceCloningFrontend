@@ -4,57 +4,45 @@ import axios from 'axios';
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('user')) || null);
+  const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('userdata')) || null);
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const response = await axios.get('/profile');
-        const userData = response.data;
-        
-        if (userData && Object.keys(userData).length > 0) {
-          setUser(userData);
-          localStorage.setItem('user', JSON.stringify(userData));
-        } else {
-          // If there's no data, store dummy data for testing purposes
-          const dummyData = {
-            id: 1,
-            name: 'Dummy User',
-            email: 'dummyuser@example.com',
-          };
-          setUser(dummyData);
-          localStorage.setItem('user', JSON.stringify(dummyData));
+    const validateUser = async () => {
+      const storedUser = JSON.parse(localStorage.getItem('userdata'));
+
+      if (storedUser) {
+        try {
+          const response = await axios.get('/profile', {storedUser});
+          const userData = response.data;
+
+          if (JSON.stringify(userData) === JSON.stringify(storedUser)) {
+            alert("they match");
+            setUser(userData);
+          } else {
+            // logout(); // Data mismatch, log out the user
+          }
+        } catch (error) {
+          console.error('Error validating user:', error);
+          // logout(); // Error during validation, log out the user
         }
-      } catch (error) {
-        console.error('Error fetching user profile:', error);
-        // On error, also use dummy data
-        const dummyData = {
-          id: 1,
-          name: 'Dummy User',
-          email: 'dummyuser@example.com',
-        };
-        setUser(dummyData);
-        localStorage.setItem('user', JSON.stringify(dummyData));
       }
     };
 
-    if (!user) {
-      fetchUserProfile();
-    }
-  }, [user]);
+    validateUser();
+  }, []);
 
   const login = (userData) => {
     setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
+    localStorage.setItem('userdata', JSON.stringify(userData));
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user');
+    localStorage.removeItem('userdata');
   };
 
   return (
-    <UserContext.Provider value={{ user, login, logout }}>
+    <UserContext.Provider value={{ user, login, setUser }}>
       {children}
     </UserContext.Provider>
   );

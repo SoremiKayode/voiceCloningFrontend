@@ -1,17 +1,7 @@
 import React from 'react';
 import { Table, TableRow, TableCell, Button, ButtonTable } from './AdminStyles';
 
-const UserTable = () => {
-  // Sample users data
-  const users = [
-    { id: 1, email: 'user1@example.com', phone: '123456789' },
-    { id: 2, email: 'user2@example.com', phone: '987654321' },
-    // Add more users
-  ];
-
-  const handleDelete = (id) => {
-    // Delete user logic here
-  };
+const UserTable = ({ users, onDeleteUser, onEditUser }) => {
 
   return (
     <div>
@@ -25,13 +15,13 @@ const UserTable = () => {
           </tr>
         </thead>
         <tbody>
-          {users.map(user => (
-            <TableRow key={user.id}>
+          {users && users.map(user => (
+            <TableRow key={user._id}>
               <TableCell>{user.email}</TableCell>
-              <TableCell>{user.phone}</TableCell>
+              <TableCell>{user.phoneNumber}</TableCell>
               <TableCell>
-                <ButtonTable>Edit</ButtonTable>
-                <ButtonTable onClick={() => handleDelete(user.id)}>Delete</ButtonTable>
+                <ButtonTable onClick={() => onEditUser(user)}>Edit</ButtonTable>
+                <ButtonTable onClick={() => onDeleteUser(user._id)}>Delete</ButtonTable>
               </TableCell>
             </TableRow>
           ))}
