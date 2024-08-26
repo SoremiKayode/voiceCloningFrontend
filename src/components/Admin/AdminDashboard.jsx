@@ -19,7 +19,7 @@ const AdminDashboard = () => {
       try {
         const token = localStorage.getItem('authToken');
         const userData = JSON.parse(localStorage.getItem('userdata'));
-        const response = axios.get('http://127.0.0.1:8080/api/all-profiles', {
+        const response = axios.get('https://api.naynobo.site/api/all-profiles', {
           headers: { 'Authorization': `Token ${token}` },
           params : userData,
         });
@@ -34,7 +34,7 @@ const AdminDashboard = () => {
       try {
         const token = localStorage.getItem('authToken');
         const userData = JSON.parse(localStorage.getItem('userdata'));
-        const response = axios.get('http://127.0.0.1:8080/api/all-audio', {
+        const response = axios.get('https://api.naynobo.site/api/all-audio', {
           headers: { 'Authorization': `Token ${token}` },
           params: userData,
         });
@@ -64,7 +64,7 @@ const AdminDashboard = () => {
 
     if (Object.keys(validationErrors).length === 0) {
       try {
-        const response = await axios.post('http://127.0.0.1:8080/api/signup', formData);
+        const response = await axios.post('https://api.naynobo.site/api/signup', formData);
         showSuccessNotification('User added successfully!');
         setFormData({ email: '', phoneNumber: '', password: '', isAdmin: false });
         setUsers([...users, response.data]);
@@ -76,7 +76,7 @@ const AdminDashboard = () => {
 
   const handleDeleteUser = async (userId) => {
     try {
-      await axios.delete(`http://127.0.0.1:8080/api/delete-user/${userId}`);
+      await axios.delete(`https://api.naynobo.site/api/delete-user/${userId}`);
       showSuccessNotification('User deleted successfully!');
       setUsers(users.filter((user) => user._id !== userId));
     } catch (error) {
@@ -86,7 +86,7 @@ const AdminDashboard = () => {
 
   const handleDeleteAudio = async (audioId) => {
     try {
-      await axios.delete(`http://127.0.0.1:8080/api/delete-audio/${audioId}`);
+      await axios.delete(`https://api.naynobo.site/api/delete-audio/${audioId}`);
       showSuccessNotification('Audio deleted successfully!');
       setAudios(audios.filter((audio) => audio._id !== audioId));
     } catch (error) {

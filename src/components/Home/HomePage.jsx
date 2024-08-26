@@ -108,7 +108,7 @@ const HomePage = () => {
       }
 
       try {
-        const response = await axios.post(' http://127.0.0.1:8080/api/convert', formData, {
+        const response = await axios.post(' https://api.naynobo.site/api/convert', formData, {
           responseType: 'blob',
         });
         const audioUrl = URL.createObjectURL(response.data);
@@ -125,7 +125,7 @@ const HomePage = () => {
       }
 
       try {
-        const response = await axios.post(' http://127.0.0.1:8080/api/convert', formData);
+        const response = await axios.post(' https://api.naynobo.site/api/convert', formData);
         setGeneratedText(response.data.text);
       } catch (error) {
         console.error('Error generating text:', error);
