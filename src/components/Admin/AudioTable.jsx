@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, TableRow, TableCell, ButtonTable } from './AdminStyles';
+import { Table, TableRow, TableCell, ButtonTable, TableBox } from './AdminStyles';
 
 const AudioTable = ({ audios, onDeleteAudio }) => {
   
@@ -8,7 +8,7 @@ const AudioTable = ({ audios, onDeleteAudio }) => {
   };
 
   return (
-    <div>
+    <TableBox>
       <h2>Audio Files</h2>
       <Table>
         <thead>
@@ -34,7 +34,7 @@ const AudioTable = ({ audios, onDeleteAudio }) => {
           ))}
         </tbody>
       </Table>
-    </div>
+    </TableBox>
   );
 };
 

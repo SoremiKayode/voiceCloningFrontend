@@ -32,7 +32,7 @@ const AdminDashboard = () => {
       try {
         const token = localStorage.getItem('authToken');
         const userData = JSON.parse(localStorage.getItem('userdata'));
-        axios.get('http://127.0.0.1:8080/api/all-profiles', {
+        axios.get('https://api.naynobo.site/api/all-profiles', {
           headers: { 'Authorization': `Token ${token}` },
           params : userData,
         }).then(response => {
@@ -51,7 +51,7 @@ const AdminDashboard = () => {
       try {
         const token = localStorage.getItem('authToken');
         const userData = JSON.parse(localStorage.getItem('userdata'));
-        axios.get('http://127.0.0.1:8080/api/all-audio', {
+        axios.get('https://api.naynobo.site/api/all-audio', {
           headers: { 'Authorization': `Token ${token}` },
           params: userData,
         }).then(response => {
@@ -83,12 +83,16 @@ const AdminDashboard = () => {
 
   const handleDeleteUser = async (userId) => {
     try {
-      await axios.delete(`http://127.0.0.1:8080/delete-user/${userId}/`)
+      await axios.delete('https://api.naynobo.site/api/deleteuser', {
+        params: {
+            id: userId
+        }
+    })
       .then((response) => {
         setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
         showSuccessNotification('User deleted successfully!');
       }).catch((error) => {
-      showErrorNotification('Failed to delete user.');
+      showErrorNotification(`Failed to delete user. ${error}`);
       });
       
     } catch (error) {
@@ -99,9 +103,17 @@ const AdminDashboard = () => {
 
   const handleDeleteAudio = async (audioId) => {
     try {
-      await axios.delete(`http://127.0.0.1:8080/api/delete-audio/${audioId}`);
+      await axios.delete(`https://api.naynobo.site/api/deleteaudio`, {
+        params: {
+            id: audioId
+        }
+    }).then(response => {
       showSuccessNotification('Audio deleted successfully!');
-      setAudios(audios.filter((audio) => audio._id !== audioId));
+      setAudios(audios.filter((audio) => audio.id !== audioId));
+    }).catch(err => {
+      showErrorNotification(`Error deleting audio ${err}`);
+    });
+
     } catch (error) {
       showErrorNotification('Failed to delete audio.');
     }
@@ -127,7 +139,7 @@ const AdminDashboard = () => {
       submitForm.append("password",  formData.password);
       submitForm.append("phone_number",  formData.phoneNumber);
 
-      await axios.post('http://127.0.0.1:8080/api/signup', submitForm).then((response) => {
+      await axios.post('https://api.naynobo.site/api/signup', submitForm).then((response) => {
         showSuccessNotification("user successful login, will now redirect to home page");
         history('/admin');
       }).catch((error) => {

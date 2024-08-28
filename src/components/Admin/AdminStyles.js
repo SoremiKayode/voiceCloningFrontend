@@ -104,5 +104,4 @@ color : black;
 export const TableBox = styled.div`
   height : 300px;
   overflow-y : scroll;
-
 `

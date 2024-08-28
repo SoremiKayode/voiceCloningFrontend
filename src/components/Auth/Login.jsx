@@ -40,7 +40,7 @@ const Login = () => {
       const sanitizedPassword = password.trim();
 
       // Send login request
-      axios.post('http://127.0.0.1:8080/api/login', {
+      axios.post('https://api.naynobo.site/api/login', {
         email: sanitizedEmail,
         password: sanitizedPassword
       }).then(res => {

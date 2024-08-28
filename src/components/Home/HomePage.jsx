@@ -64,7 +64,7 @@ const HomePage = () => {
         try {
         const token = await localStorage.getItem('authToken');
         const userData = await JSON.parse(localStorage.getItem('userdata'));
-        await axios.get('http://127.0.0.1:8080/api/profile', {
+        await axios.get('https://api.naynobo.site/api/profile', {
           headers: { 'Authorization': `Token ${token}` },
           params : userData,
         }).then(response => {
@@ -145,7 +145,7 @@ const HomePage = () => {
       }
 
       try {
-        const response = await axios.post('http://127.0.0.1:8080/api/convert', formData, {
+        const response = await axios.post('https://api.naynobo.site/api/convert', formData, {
           responseType: 'blob',
         });
         const audioUrl = URL.createObjectURL(response.data);
@@ -165,7 +165,7 @@ const HomePage = () => {
       }
 
       try {
-        const response = await axios.post('http://127.0.0.1:8080/api/convert', formData);
+        const response = await axios.post('https://api.naynobo.site/api/convert', formData);
         setGeneratedText(response.data.text);
         showSuccessNotification('Text successfully generated');
       } catch (error) {
