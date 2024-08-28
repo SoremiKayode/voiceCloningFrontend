@@ -47,9 +47,9 @@ const HomePage = () => {
   useEffect(() => {
     const userinfo = localStorage.getItem('userinfo')
     if (userInfo !== "true" || userinfo !== "true") {
-      navigate('/login');
+      window.location.href = "/login";
     }
-  }, [userInfo, navigate]);
+  }, [userInfo]);
 
   useEffect(() => {
     let useData = JSON.parse(localStorage.getItem('userdata'));
@@ -57,12 +57,12 @@ const HomePage = () => {
   }, [setUserData]);
 
   useEffect(() => {
-    if (userData.verified) {
+    if (userData && (userData.verified === true || userData.verified === "true")) {
       setIsLoading(false);
     } else {
       const interval = setInterval(async () => {
         try {
-        const token = await localStorage.getItem('authToken');
+        const token = localStorage.getItem('authToken');
         const userData = await JSON.parse(localStorage.getItem('userdata'));
         await axios.get('https://api.naynobo.site/api/profile', {
           headers: { 'Authorization': `Token ${token}` },
