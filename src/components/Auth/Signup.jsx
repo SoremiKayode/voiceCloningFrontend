@@ -53,7 +53,7 @@ const Signup = () => {
       submitForm.append("password",  formData.password);
       submitForm.append("phone_number",  formData.phoneNumber);
 
-      await axios.post('https://api.naynobo.site/api/signup', submitForm).then((response) => {
+      await axios.post('http://127.0.0.1:8080/api/signup', submitForm).then((response) => {
         showSuccessNotification("user successful login, will now redirect to home page");
         history('/login');
       }).catch((error) => {

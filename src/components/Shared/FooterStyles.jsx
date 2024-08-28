@@ -9,6 +9,7 @@ export const FooterContainer = styled.footer`
   color: ${({ theme }) => (theme === 'light' ? '#000' : '#fff')};
   box-shadow : 2px 4px 8px rgba(0, 0, 0, 0.2), 4px 8px 16px rgba(0, 0, 0,0.2);
   text-align: center;
+  margin-top: 8rem;
 `;
 
 export const FooterLogo = styled.h2`

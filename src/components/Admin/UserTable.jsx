@@ -1,10 +1,10 @@
 import React from 'react';
-import { Table, TableRow, TableCell, Button, ButtonTable } from './AdminStyles';
+import { Table, TableRow, TableCell, ButtonTable, TableBox } from './AdminStyles';
 
-const UserTable = ({ users, onDeleteUser, onEditUser }) => {
+const UserTable = ({ users, onDeleteUser, theme }) => {
 
   return (
-    <div>
+    <TableBox>
       <h2>Users</h2>
       <Table>
         <thead>
@@ -20,15 +20,13 @@ const UserTable = ({ users, onDeleteUser, onEditUser }) => {
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.phoneNumber}</TableCell>
               <TableCell>
-                <ButtonTable onClick={() => onEditUser(user)}>Edit</ButtonTable>
-                <ButtonTable onClick={() => onDeleteUser(user._id)}>Delete</ButtonTable>
+                <ButtonTable onClick={() => onDeleteUser(user.id)} theme={theme}>Delete</ButtonTable>
               </TableCell>
             </TableRow>
           ))}
         </tbody>
       </Table>
-      <Button>Add User</Button>
-    </div>
+    </TableBox>
   );
 };
 

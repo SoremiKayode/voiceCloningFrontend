@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, TableRow, TableCell, Button } from './AdminStyles';
+import { Table, TableRow, TableCell, ButtonTable } from './AdminStyles';
 
 const AudioTable = ({ audios, onDeleteAudio }) => {
   
@@ -14,19 +14,21 @@ const AudioTable = ({ audios, onDeleteAudio }) => {
         <thead>
           <tr>
             <th>File Name</th>
+            <th>Owner Name</th>
             <th>Date</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {audios && audios.forEach(audio => (
-            <TableRow key={audio._id}>
+          {audios && audios.map(audio => (
+            <TableRow key={audio.id}>
               <TableCell>
-                <Button onClick={() => handleOpenAudio(audio.url)}>{audio.name}</Button>
+                <ButtonTable onClick={() => handleOpenAudio(audio.location)}>{audio.location}</ButtonTable>
               </TableCell>
+              <TableCell>{audio.name}</TableCell>
               <TableCell>{new Date(audio.datetime).toLocaleDateString()}</TableCell>
               <TableCell>
-                <Button onClick={() => onDeleteAudio(audio._id)}>Delete</Button>
+                <ButtonTable onClick={() => onDeleteAudio(audio.id)}>Delete</ButtonTable>
               </TableCell>
             </TableRow>
           ))}

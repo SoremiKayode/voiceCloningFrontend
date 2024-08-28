@@ -5,6 +5,7 @@ import Login from './components/Auth/Login';
 import Signup from './components/Auth/Signup';
 import AdminDashboard from './components/Admin/AdminDashboard';
 import EditUser from './components/Admin/EditUser';
+import Confirm from './components/Shared/Confirm';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { UserProvider } from './contexts/UserContext'; // Adjust the path as needed
 import Layout from './components/Layout';
@@ -19,6 +20,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/confirm" element={<Confirm />} />
         <Route path="/admin/edit/:id" element={<EditUser />} />
       </Routes>
       </Layout>

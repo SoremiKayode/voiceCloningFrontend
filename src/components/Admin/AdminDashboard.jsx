@@ -1,30 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import { AdminContainer, Sidebar, Content, Button } from './AdminStyles';
+import { AdminContainer, Sidebar,
+  FormWrapper, Input, Button, ErrorLabel, Content
+   } from './AdminStyles';
 import UserTable from './UserTable';
 import AudioTable from './AudioTable';
 import { sanitizeUserInput } from '../../utils/userSanitization';
 import axios from 'axios';
 import { showErrorNotification, showSuccessNotification } from '../../utils/Notification';
+import { useTheme } from '../../contexts/ThemeContext';
+import { useNavigate } from 'react-router-dom';
+
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('users');
-  const [formData, setFormData] = useState({ email: '', phoneNumber: '', password: '', isAdmin: false });
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    password: '',
+    phoneNumber: '',
+  });
   const [errors, setErrors] = useState({});
   const [users, setUsers] = useState([]);
   const [audios, setAudios] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
+  const { theme } = useTheme();
+  const history = useNavigate();
+
 
   useEffect(() => {
     const fetchUsers = () => {
       try {
         const token = localStorage.getItem('authToken');
         const userData = JSON.parse(localStorage.getItem('userdata'));
-        const response = axios.get('https://api.naynobo.site/api/all-profiles', {
+        axios.get('http://127.0.0.1:8080/api/all-profiles', {
           headers: { 'Authorization': `Token ${token}` },
           params : userData,
+        }).then(response => {
+          setUsers(response.data);
+          showSuccessNotification(`successfully fetched Data`)
+        }).catch(error => {
+        showErrorNotification(`Failed to fetch users ${error.message}.`);
         });
-        setUsers(response.data);
-        showSuccessNotification(`${response.data[0]}`)
+
       } catch (error) {
         showErrorNotification('Failed to fetch users.');
       }
@@ -34,12 +51,17 @@ const AdminDashboard = () => {
       try {
         const token = localStorage.getItem('authToken');
         const userData = JSON.parse(localStorage.getItem('userdata'));
-        const response = axios.get('https://api.naynobo.site/api/all-audio', {
+        axios.get('http://127.0.0.1:8080/api/all-audio', {
           headers: { 'Authorization': `Token ${token}` },
           params: userData,
+        }).then(response => {
+          setAudios(response.data);
+          alert(response.data[0].name);
+          showSuccessNotification(`Successully Fetch Audio files`);
+        }).catch(error => {
+        showErrorNotification('Failed to fetch audio files.');
         });
-        setAudios(response.data);
-        showSuccessNotification(`${response.data[0]}`)
+
       } catch (error) {
         showErrorNotification('Failed to fetch audio files.');
       }
@@ -52,41 +74,32 @@ const AdminDashboard = () => {
   }, []);
   
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const validationErrors = sanitizeUserInput(formData);
-    setErrors(validationErrors);
-
-    if (Object.keys(validationErrors).length === 0) {
-      try {
-        const response = await axios.post('https://api.naynobo.site/api/signup', formData);
-        showSuccessNotification('User added successfully!');
-        setFormData({ email: '', phoneNumber: '', password: '', isAdmin: false });
-        setUsers([...users, response.data]);
-      } catch (error) {
-        showErrorNotification('Failed to add user.');
-      }
-    }
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleDeleteUser = async (userId) => {
     try {
-      await axios.delete(`https://api.naynobo.site/api/delete-user/${userId}`);
-      showSuccessNotification('User deleted successfully!');
-      setUsers(users.filter((user) => user._id !== userId));
+      await axios.delete(`http://127.0.0.1:8080/delete-user/${userId}/`)
+      .then((response) => {
+        setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+        showSuccessNotification('User deleted successfully!');
+      }).catch((error) => {
+      showErrorNotification('Failed to delete user.');
+      });
+      
     } catch (error) {
-     showErrorNotification('Failed to delete user.');
+      showErrorNotification('Failed to delete user.');
     }
   };
+  
 
   const handleDeleteAudio = async (audioId) => {
     try {
-      await axios.delete(`https://api.naynobo.site/api/delete-audio/${audioId}`);
+      await axios.delete(`http://127.0.0.1:8080/api/delete-audio/${audioId}`);
       showSuccessNotification('Audio deleted successfully!');
       setAudios(audios.filter((audio) => audio._id !== audioId));
     } catch (error) {
@@ -94,19 +107,40 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleEditUser = (user) => {
-    setEditingUser(user);
-    setFormData({
-      email: user.email,
-      phoneNumber: user.phoneNumber,
-      password: '',
-      isAdmin: user.isAdmin,
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const validationErrors = sanitizeUserInput({
+      email: formData.email,
+      phoneNumber: formData.phoneNumber,
+      password: formData.password,
     });
-    setActiveTab('addUser');
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    try {
+      const submitForm = new FormData();
+      submitForm.append("full_name",  formData.fullName);
+      submitForm.append("email",  formData.email);
+      submitForm.append("password",  formData.password);
+      submitForm.append("phone_number",  formData.phoneNumber);
+
+      await axios.post('http://127.0.0.1:8080/api/signup', submitForm).then((response) => {
+        showSuccessNotification("user successful login, will now redirect to home page");
+        history('/admin');
+      }).catch((error) => {
+        showErrorNotification(`Error: ' + ${error}`);
+      });
+
+    } catch (error) {
+      showErrorNotification('Error signing up. Please try again.');
+    }
   };
 
   return (
-    <AdminContainer>
+    <AdminContainer theme={theme}>
       <Sidebar>
         <ul>
           <li onClick={() => setActiveTab('users')}>Dashboard</li>
@@ -115,56 +149,51 @@ const AdminDashboard = () => {
         </ul>
       </Sidebar>
       <Content>
-        {activeTab === 'users' && <UserTable users={users} onDeleteUser={handleDeleteUser} onEditUser={handleEditUser} />}
+        {activeTab === 'users' && <UserTable users={users} onDeleteUser={handleDeleteUser} theme={theme} />}
         {activeTab === 'audio' && <AudioTable audios={audios} onDeleteAudio={handleDeleteAudio} />}
         {activeTab === 'addUser' && (
-          <form onSubmit={handleSubmit}>
-            <div>
-              <label>Email:</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-              />
-              {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
-            </div>
-            <div>
-              <label>Phone Number:</label>
-              <input
-                type="text"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleInputChange}
-                required
-              />
-              {errors.phoneNumber && <p style={{ color: 'red' }}>{errors.phoneNumber}</p>}
-            </div>
-            <div>
-              <label>Password:</label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
-                required
-              />
-              {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
-            </div>
-            <div>
-              <label>Admin:</label>
-              <select
-                name="isAdmin"
-                value={formData.isAdmin}
-                onChange={handleInputChange}
-              >
-                <option value={false}>No</option>
-                <option value={true}>Yes</option>
-              </select>
-            </div>
-            <Button type="submit">{editingUser ? 'Update User' : 'Add User'}</Button>
-          </form>
+     <FormWrapper theme={theme}>
+     <h2>Sign Up</h2>
+     <form onSubmit={handleSubmit} method='post'>
+       <Input
+         type="text"
+         name="fullName"
+         placeholder="Full Name"
+         value={formData.fullName}
+         onChange={handleChange}
+       />
+       {errors.fullName && <ErrorLabel>{errors.fullName}</ErrorLabel>}
+
+       <Input
+         type="email"
+         name="email"
+         placeholder="Email"
+         value={formData.email}
+         onChange={handleChange}
+       />
+       {errors.email && <ErrorLabel>{errors.email}</ErrorLabel>}
+
+       <Input
+         type="text"
+         name="phoneNumber"
+         placeholder="Phone Number"
+         value={formData.phoneNumber}
+         onChange={handleChange}
+       />
+       {errors.phoneNumber && <ErrorLabel>{errors.phoneNumber}</ErrorLabel>}
+
+       <Input
+         type="password"
+         name="password"
+         placeholder="Password"
+         value={formData.password}
+         onChange={handleChange}
+       />
+       {errors.password && <ErrorLabel>{errors.password}</ErrorLabel>}
+
+       <Button type="submit" />
+     </form>
+   </FormWrapper>
         )}
       </Content>
     </AdminContainer>

@@ -40,7 +40,7 @@ const Login = () => {
       const sanitizedPassword = password.trim();
 
       // Send login request
-      axios.post('https://api.naynobo.site/api/login', {
+      axios.post('http://127.0.0.1:8080/api/login', {
         email: sanitizedEmail,
         password: sanitizedPassword
       }).then(res => {
@@ -55,7 +55,7 @@ const Login = () => {
       window.location.href = "/";
       
       }).catch(err => {
-        showErrorNotification(`Error:  + ${err}`);
+        showErrorNotification(`Login Error:  + ${err.message}`);
       });
 
     } catch (err) {
